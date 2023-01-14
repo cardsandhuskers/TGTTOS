@@ -1,0 +1,13 @@
+#recommended 60
+PregameTime: 15
+#recommended 15
+PreroundTime: 15
+#recommended 120
+RoundTime: 60
+#recommended 5
+PostroundTime: 5
+#recommended 30
+GameEndTime: 10
+
+maxPoints: 80
+dropoff: 3
