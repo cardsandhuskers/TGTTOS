@@ -37,7 +37,11 @@ public class PlayerDamageListener implements Listener {
             e.getEntity().teleport(arena.getSpawn());
             e.getEntity().sendMessage(ChatColor.GRAY + "You fell off");
             e.getEntity().setFireTicks(0);
-            e.setCancelled(true);
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, ()-> {
+                Player p = (Player)e.getEntity();
+                p.setHealth(20);
+            },1);
+            //e.setCancelled(true);
         }else {
             e.setCancelled(true);
         }

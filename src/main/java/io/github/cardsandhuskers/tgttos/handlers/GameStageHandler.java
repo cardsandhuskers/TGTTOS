@@ -46,7 +46,6 @@ public class GameStageHandler {
         plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin, this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new ItemThrowListener(), plugin);
 
-
         pregameTimer();
     }
 
@@ -300,17 +299,12 @@ public class GameStageHandler {
 
                 //Timer End
                 () -> {
-                    Player op = null;
                     for(Player p:Bukkit.getOnlinePlayers()) {
                         p.teleport(plugin.getConfig().getLocation("Lobby"));
-                        if(p.isOp()) {
-                            op = p;
-                        }
-                    }
-                    if(op != null) {
-                        op.performCommand("startRound");
                     }
                     HandlerList.unregisterAll(plugin);
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "startRound");
+
                 },
 
                 //Each Second

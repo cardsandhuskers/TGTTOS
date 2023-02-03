@@ -4,15 +4,12 @@ import io.github.cardsandhuskers.teams.Teams;
 import io.github.cardsandhuskers.teams.handlers.TeamHandler;
 import io.github.cardsandhuskers.tgttos.commands.*;
 import io.github.cardsandhuskers.tgttos.objects.Placeholder;
-import org.black_ixx.playerpoints.PlayerPoints;
-import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TGTTOS extends JavaPlugin {
 
     public static int timeVar = 0;
-    public static PlayerPointsAPI ppAPI;
     public static TeamHandler handler;
     public static State gameState = State.GAME_STARTING;
     public static int currentRound;
@@ -23,13 +20,6 @@ public final class TGTTOS extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        if (Bukkit.getPluginManager().isPluginEnabled("PlayerPoints")) {
-            this.ppAPI = PlayerPoints.getInstance().getAPI();
-        } else {
-            System.out.println("Could not find PlayerPointsAPI! This plugin is required.");
-            Bukkit.getPluginManager().disablePlugin(this);
-        }
-
 
         //Placeholder API validation
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {

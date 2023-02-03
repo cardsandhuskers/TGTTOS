@@ -27,7 +27,7 @@ public class ButtonPressListener implements Listener {
 
                 int maxPoints = plugin.getConfig().getInt("maxPoints");
                 int dropoff = plugin.getConfig().getInt("dropoff");
-                int points = (int)(multiplier * (maxPoints - (playersCompleted - 1) * dropoff));
+                double points = (multiplier * (maxPoints - (playersCompleted - 1) * dropoff));
 
 
                 //1st,2nd,and 3rd are special cases
@@ -71,7 +71,6 @@ public class ButtonPressListener implements Listener {
                 }
 
                 handler.getPlayerTeam(p).addTempPoints(p, points);
-                ppAPI.give(p.getUniqueId(), points);
 
                 p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
                 p.setGameMode(GameMode.SPECTATOR);

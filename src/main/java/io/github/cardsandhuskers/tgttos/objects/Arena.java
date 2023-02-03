@@ -4,8 +4,12 @@ import io.github.cardsandhuskers.tgttos.TGTTOS;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.entity.Player;
+
+import java.util.logging.Level;
 
 public class Arena {
     private Location pos1, pos2;
@@ -119,8 +123,8 @@ public class Arena {
                     }
                 }
             },2);
-
         }
+        saveWater();
     }
 
     /**
@@ -141,6 +145,21 @@ public class Arena {
             case 'y': return l.getBlockY();
             case 'z': return l.getBlockZ();
             default: return 0;
+        }
+    }
+
+    private void saveWater() {
+        for(int x = getCoordinate(lowerx, 'x'); x <= getCoordinate(higherx, 'x'); x++) {
+            for (int y = getCoordinate(lowery, 'y'); y <= getCoordinate(highery, 'y'); y++) {
+                for (int z = getCoordinate(lowerz, 'z'); z <= getCoordinate(higherz, 'z'); z++) {
+                    Location l = new Location(pos1.getWorld(), x, y, z);
+
+                    if(l.getBlock().getType() == Material.WATER) {
+                        Levelled level = (Levelled) l.getBlock().getBlockData();
+                        System.out.println(level.getLevel()); //0 should be full block I think https://minecraft.fandom.com/wiki/Water#Block_states
+                    }
+                }
+            }
         }
     }
 
