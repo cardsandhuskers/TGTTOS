@@ -103,7 +103,7 @@ public class GameStageHandler {
                         Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
                         Bukkit.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "How the game is Scored (for each level):");
                         Bukkit.broadcastMessage("1st Place: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("maxPoints") * multiplier) + ChatColor.RESET + " points" +
-                                "\nPoint Drop-off: " + ChatColor.GOLD + (int)(-plugin.getConfig().getInt("dropoff") * multiplier) + ChatColor.RESET + " points for each player ahead");
+                                "\nPoint Drop-off: " + ChatColor.GOLD + (-plugin.getConfig().getDouble("dropoff") * multiplier) + ChatColor.RESET + " points for each player ahead");
                         Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
 
                         for(Player p:Bukkit.getOnlinePlayers()) {
