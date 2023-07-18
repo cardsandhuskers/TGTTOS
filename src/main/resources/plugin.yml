@@ -5,6 +5,7 @@ api-version: 1.19
 authors: [ cardsandhuskers ]
 description: To get to the Other Side and Press the Button
 depend: [PlaceholderAPI, Teams]
+softdepend: [Multiverse-Core]
 commands:
   setTGTTOSPos1:
     description: sets position 1 of the arena

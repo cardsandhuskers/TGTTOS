@@ -47,8 +47,8 @@ public final class TGTTOS extends JavaPlugin {
 
         handler = Teams.handler;
 
-        saveDefaultConfig();
         getConfig().options().copyDefaults(true);
+        saveConfig();
 
     }
 
