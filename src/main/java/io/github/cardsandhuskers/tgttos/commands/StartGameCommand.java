@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class StartGameCommand implements CommandExecutor {
 
     private TGTTOS plugin;
+    private GameStageHandler gameStageHandler;
     public StartGameCommand(TGTTOS plugin) {
         this.plugin = plugin;
     }
@@ -74,7 +75,12 @@ public class StartGameCommand implements CommandExecutor {
         }
 
         //makes GameStageHandler and starts game
-        GameStageHandler gameStageHandler = new GameStageHandler(arenas, plugin);
+        gameStageHandler = new GameStageHandler(arenas, plugin);
         gameStageHandler.startGame();
+    }
+
+    public boolean cancelTimers() {
+        if(gameStageHandler == null) return false;
+        return gameStageHandler.cancelTimers();
     }
 }

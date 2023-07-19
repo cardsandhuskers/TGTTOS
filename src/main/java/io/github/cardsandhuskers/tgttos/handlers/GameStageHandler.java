@@ -6,6 +6,7 @@ import io.github.cardsandhuskers.tgttos.TGTTOS;
 import io.github.cardsandhuskers.tgttos.listeners.*;
 import io.github.cardsandhuskers.tgttos.objects.Arena;
 import io.github.cardsandhuskers.tgttos.objects.Countdown;
+import io.github.cardsandhuskers.tgttos.objects.GameMessages;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -25,9 +26,8 @@ import static io.github.cardsandhuskers.tgttos.TGTTOS.*;
 public class GameStageHandler {
     private ArrayList<Arena> arenas;
     private TGTTOS plugin;
-    private Countdown pregameTimer;
+    private Countdown pregameTimer, preroundTimer, roundTimer, postroundTimer, gameEndTimer;
     private Arena currentArena;
-    private Countdown roundTimer;
     public GameStageHandler(ArrayList<Arena> arenas, TGTTOS plugin) {
         this.arenas = arenas;
         this.plugin = plugin;
@@ -85,14 +85,7 @@ public class GameStageHandler {
                 //Each Second
                 (t) -> {
                     if(t.getSecondsLeft() == t.getTotalSeconds() - 2) {
-                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
-                        Bukkit.broadcastMessage(StringUtils.center(ChatColor.GOLD + "" + ChatColor.BOLD + "To Get to the Other Side and Click a Button", 30));
-                        Bukkit.broadcastMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "How To Play:");
-                        Bukkit.broadcastMessage("Welcome to TGTTOSACAB!" +
-                                "\nThere are 6 levels, you will have " + ChatColor.YELLOW + "" + ChatColor.BOLD + 2 + ChatColor.RESET + " minutes to complete each level!" +
-                                "\nThe goal is to get across the opening. Each level is unique, with different obstacles and modes of travel." +
-                                "\nWhen you reach the end, find a button and press it to complete the level.");
-                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
+                        Bukkit.broadcastMessage(GameMessages.gameDescription());
 
                         for(Player p:Bukkit.getOnlinePlayers()) {
                             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
@@ -100,11 +93,7 @@ public class GameStageHandler {
                     }
 
                     if(t.getSecondsLeft() == t.getTotalSeconds() - 12) {
-                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
-                        Bukkit.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "How the game is Scored (for each level):");
-                        Bukkit.broadcastMessage("1st Place: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("maxPoints") * multiplier) + ChatColor.RESET + " points" +
-                                "\nPoint Drop-off: " + ChatColor.GOLD + (-plugin.getConfig().getDouble("dropoff") * multiplier) + ChatColor.RESET + " points for each player ahead");
-                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
+                        Bukkit.broadcastMessage(GameMessages.pointsDescription(plugin));
 
                         for(Player p:Bukkit.getOnlinePlayers()) {
                             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
@@ -132,7 +121,7 @@ public class GameStageHandler {
      */
     public void preRoundTimer() {
         int time = plugin.getConfig().getInt("PreroundTime");
-        Countdown preroundTimer = new Countdown((JavaPlugin)plugin,
+        preroundTimer = new Countdown((JavaPlugin)plugin,
                 //should be 20
                 time,
                 //Timer Start
@@ -247,6 +236,25 @@ public class GameStageHandler {
                 //Each Second
                 (t) -> {
                     timeVar = t.getSecondsLeft();
+
+                    if(t.getSecondsLeft() % 2 == 0) {
+                        for(Team team: handler.getTeams()) {
+                            for(Player p:team.getOnlinePlayers()) {
+                                if (p.getGameMode() == GameMode.SURVIVAL) {
+                                    if (currentArena.hasTrident()) {
+                                        if (!p.getInventory().contains(Material.TRIDENT)) giveItems(p);
+                                    }
+                                    if (currentArena.hasElytra()) {
+                                        if (p.getInventory().getChestplate() == null) giveItems(p);
+                                    }
+                                    if (currentArena.hasBlocks()) {
+                                        //TODO give blocks if they lose them somehow
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                 }
         );
 
@@ -258,7 +266,7 @@ public class GameStageHandler {
      * Post round timer, just a time buffer
      */
     public void postRoundTimer() {
-        Countdown postroundTimer = new Countdown(plugin,
+        postroundTimer = new Countdown(plugin,
                 plugin.getConfig().getInt("PostroundTime"),
                 //Timer Start
                 () -> {
@@ -289,7 +297,7 @@ public class GameStageHandler {
      * Timer for very end of game, displays results and returns players to main lobby
      */
     public void gameEndTimer() {
-        Countdown gameEndTimer = new Countdown((JavaPlugin)plugin,
+        gameEndTimer = new Countdown((JavaPlugin)plugin,
                 //should be 30
                 plugin.getConfig().getInt("GameEndTime"),
                 //Timer Start
@@ -310,86 +318,39 @@ public class GameStageHandler {
                 //Each Second
                 (t) -> {
                     timeVar = t.getSecondsLeft();
-                    //top 5 players
-                    if(t.getSecondsLeft() == t.getTotalSeconds()) {
-                        ArrayList<TempPointsHolder> tempPointsList = new ArrayList<>();
-                        for(Team team: handler.getTeams()) {
-                            for(Player p:team.getOnlinePlayers()) {
-                                tempPointsList.add(team.getPlayerTempPoints(p));
-                                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
-                            }
-                        }
-
-                        Collections.sort(tempPointsList, Comparator.comparing(TempPointsHolder::getPoints));
-                        Collections.reverse(tempPointsList);
-
-                        int max;
-                        if(tempPointsList.size() >= 5) {
-                            max = 4;
-                        } else {
-                            max = tempPointsList.size() - 1;
-                        }
-
-                        Bukkit.broadcastMessage("\n" + ChatColor.RED + "" + ChatColor.BOLD + "Top 5 Players:");
-                        Bukkit.broadcastMessage(ChatColor.DARK_RED + "------------------------------");
-                        int number = 1;
-                        for(int i = 0; i <= max; i++) {
-                            TempPointsHolder h = tempPointsList.get(i);
-                            Bukkit.broadcastMessage(number + ". " + handler.getPlayerTeam(h.getPlayer()).color + h.getPlayer().getName() + ChatColor.RESET + "    Points: " +  h.getPoints());
-                            number++;
-                        }
-                        Bukkit.broadcastMessage(ChatColor.DARK_RED + "------------------------------");
-                    }
-
-                    //team players performance
-                    if(t.getSecondsLeft() == t.getTotalSeconds() - 10) {
-                        for (Team team : handler.getTeams()) {
-                            ArrayList<TempPointsHolder> tempPointsList = new ArrayList<>();
-                            for (Player p : team.getOnlinePlayers()) {
-                                if (team.getPlayerTempPoints(p) != null) {
-                                    tempPointsList.add(team.getPlayerTempPoints(p));
-                                }
-                            }
-                            Collections.sort(tempPointsList, Comparator.comparing(TempPointsHolder::getPoints));
-                            Collections.reverse(tempPointsList);
-
-                            for (Player p : team.getOnlinePlayers()) {
-                                p.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Your Team Standings:");
-                                p.sendMessage(ChatColor.DARK_BLUE + "------------------------------");
-                                int number = 1;
-                                for (TempPointsHolder h : tempPointsList) {
-                                    p.sendMessage(number + ". " + handler.getPlayerTeam(p).color + h.getPlayer().getName() + ChatColor.RESET + "    Points: " + h.getPoints());
-                                    number++;
-                                }
-                                p.sendMessage(ChatColor.DARK_BLUE + "------------------------------\n");
-                                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
-                            }
-                        }
-                    }
-
-                    //game leaderboard (each team's points)
-                    if(t.getSecondsLeft() == t.getTotalSeconds() - 20) {
-                        ArrayList<Team> teamList = handler.getTeams();
-                        Collections.sort(teamList, Comparator.comparing(Team::getTempPoints));
-                        Collections.reverse(teamList);
-
-                        Bukkit.broadcastMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "Team Leaderboard:");
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "------------------------------");
-                        int counter = 1;
-                        for(Team team:teamList) {
-                            Bukkit.broadcastMessage(counter + ". " + team.color + ChatColor.BOLD +  team.getTeamName() + ChatColor.RESET + " Points: " + team.getTempPoints());
-                            counter++;
-                        }
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "------------------------------");
-                        for(Player p: Bukkit.getOnlinePlayers()) {
-                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
-                        }
-                    }
+                    if(t.getSecondsLeft() == t.getTotalSeconds() - 1) GameMessages.announceTopPlayers();
+                    if(t.getSecondsLeft() == t.getTotalSeconds() - 6) GameMessages.announceTeamPlayers();
+                    if(t.getSecondsLeft() == t.getTotalSeconds() - 11) GameMessages.announceTeamLeaderboard();
                 }
         );
 
         // Start scheduling, don't use the "run" method unless you want to skip a second
         gameEndTimer.scheduleTimer();
+    }
+
+    public boolean cancelTimers() {
+        boolean cancel = false;
+        if(pregameTimer != null) {
+            pregameTimer.cancelTimer();
+            cancel = true;
+        }
+        if(preroundTimer != null) {
+            preroundTimer.cancelTimer();
+            cancel = true;
+        }
+        if(roundTimer != null) {
+            roundTimer.cancelTimer();
+            cancel = true;
+        }
+        if(postroundTimer != null) {
+            postroundTimer.cancelTimer();
+            cancel = true;
+        }
+        if(gameEndTimer != null) {
+            gameEndTimer.cancelTimer();
+            cancel = true;
+        }
+        return cancel;
     }
 
     /**

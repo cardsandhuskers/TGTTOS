@@ -24,3 +24,9 @@ commands:
   setTGTTOSLobby:
     description: sets the lobby point to return players to
     usage: /<command>
+  reloadTGTTOS:
+    description: reloads the config for the game
+    usage: /<command>
+  cancelTGTTOS:
+    description: cancels the game
+    usage: /<command>

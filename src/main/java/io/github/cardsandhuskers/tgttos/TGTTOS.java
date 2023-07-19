@@ -42,8 +42,11 @@ public final class TGTTOS extends JavaPlugin {
         getCommand("setTGTTOSPos2").setExecutor(new SetPos2Command(this));
         getCommand("setTGTTOSSpawnPoint").setExecutor(new SetSpawnCommand(this));
         getCommand("setTGTTOSArenaSpawnPoint").setExecutor(new SetArenaSpawnCommand(this));
-        getCommand("startTGTTOS").setExecutor(new StartGameCommand(this));
+        StartGameCommand startGameCommand = new StartGameCommand(this);
+        getCommand("startTGTTOS").setExecutor(startGameCommand);
         getCommand("setTGTTOSLobby").setExecutor(new SetLobbyCommand(this));
+        getCommand("reloadTGTTOS").setExecutor(new ReloadConfigCommand(this));
+        getCommand("cancelTGTTOS").setExecutor(new CancelGameCommand(this, startGameCommand));
 
         handler = Teams.handler;
 
