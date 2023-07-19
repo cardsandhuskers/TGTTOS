@@ -34,7 +34,7 @@ public class StartGameCommand implements CommandExecutor {
                 try {
                     TGTTOS.multiplier = Double.parseDouble(args[0]);
                     startGame();
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     p.sendMessage(ChatColor.RED + "ERROR: argument must be a double");
                 }
             } else {
@@ -45,7 +45,7 @@ public class StartGameCommand implements CommandExecutor {
                 try {
                     TGTTOS.multiplier = Double.parseDouble(args[0]);
                     startGame();
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     System.out.println(ChatColor.RED + "ERROR: argument must be a double");
                 }
             } else {

@@ -30,6 +30,10 @@ public class Arena {
         trident = plugin.getConfig().getBoolean("Arenas." + arenaNumber + ".Trident");
         blocks = plugin.getConfig().getBoolean("Arenas." + arenaNumber + ".Blocks");
         name = plugin.getConfig().getString("Arenas." + arenaNumber + ".Name");
+
+        if(pos1 == null) System.out.println("POS1 IS NULL");
+        if(pos2 == null) System.out.println("POS2 IS NULL");
+
         calcLocations();
         clearArena();
     }
@@ -139,6 +143,8 @@ public class Arena {
             l = pos1;
         } else if(pos == "pos2") {
             l = pos2;
+        } else {
+            System.out.println("PROBLEM");
         }
         switch(axis) {
             case 'x': return l.getBlockX();
