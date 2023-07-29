@@ -4,12 +4,8 @@ import io.github.cardsandhuskers.tgttos.TGTTOS;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Levelled;
-import org.bukkit.entity.Player;
-
-import java.util.logging.Level;
 
 public class Arena {
     private Location pos1, pos2;

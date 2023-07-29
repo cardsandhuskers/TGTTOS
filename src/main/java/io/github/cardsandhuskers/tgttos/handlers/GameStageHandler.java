@@ -1,13 +1,11 @@
 package io.github.cardsandhuskers.tgttos.handlers;
 
 import io.github.cardsandhuskers.teams.objects.Team;
-import io.github.cardsandhuskers.teams.objects.TempPointsHolder;
 import io.github.cardsandhuskers.tgttos.TGTTOS;
 import io.github.cardsandhuskers.tgttos.listeners.*;
 import io.github.cardsandhuskers.tgttos.objects.Arena;
 import io.github.cardsandhuskers.tgttos.objects.Countdown;
 import io.github.cardsandhuskers.tgttos.objects.GameMessages;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -18,8 +16,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import static io.github.cardsandhuskers.tgttos.TGTTOS.*;
 
@@ -86,18 +82,11 @@ public class GameStageHandler {
                 (t) -> {
                     if(t.getSecondsLeft() == t.getTotalSeconds() - 2) {
                         Bukkit.broadcastMessage(GameMessages.gameDescription());
-
-                        for(Player p:Bukkit.getOnlinePlayers()) {
-                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
-                        }
+                        for(Player p:Bukkit.getOnlinePlayers()) p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
                     }
-
                     if(t.getSecondsLeft() == t.getTotalSeconds() - 12) {
                         Bukkit.broadcastMessage(GameMessages.pointsDescription(plugin));
-
-                        for(Player p:Bukkit.getOnlinePlayers()) {
-                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
-                        }
+                        for(Player p:Bukkit.getOnlinePlayers()) p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
                     }
 
                     if(t.getSecondsLeft() == 5) {
@@ -229,7 +218,7 @@ public class GameStageHandler {
                     Bukkit.broadcastMessage(ChatColor.AQUA + "Round Over!");
                     for(Player p:Bukkit.getOnlinePlayers()) {
                         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
-                        p.sendTitle(ChatColor.AQUA + "Round Over!", "", 5,20,5);
+                        p.sendTitle(ChatColor.AQUA + "Round Over!", "", 5,50,5);
                     }
                 },
 

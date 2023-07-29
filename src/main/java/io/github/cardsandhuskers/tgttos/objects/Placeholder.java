@@ -4,7 +4,6 @@ package io.github.cardsandhuskers.tgttos.objects;
 import io.github.cardsandhuskers.tgttos.TGTTOS;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import static io.github.cardsandhuskers.tgttos.TGTTOS.*;
 

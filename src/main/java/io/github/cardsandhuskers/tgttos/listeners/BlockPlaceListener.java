@@ -1,6 +1,5 @@
 package io.github.cardsandhuskers.tgttos.listeners;
 
-import io.github.cardsandhuskers.tgttos.TGTTOS;
 import io.github.cardsandhuskers.tgttos.handlers.GameStageHandler;
 import io.github.cardsandhuskers.tgttos.objects.Arena;
 import org.bukkit.Location;
@@ -10,8 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
 
 import static io.github.cardsandhuskers.tgttos.TGTTOS.handler;
 

@@ -2,7 +2,6 @@ package io.github.cardsandhuskers.tgttos.listeners;
 
 import io.github.cardsandhuskers.tgttos.TGTTOS;
 import io.github.cardsandhuskers.tgttos.handlers.GameStageHandler;
-import io.github.cardsandhuskers.tgttos.objects.Arena;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
