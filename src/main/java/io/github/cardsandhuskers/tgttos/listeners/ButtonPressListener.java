@@ -28,46 +28,28 @@ public class ButtonPressListener implements Listener {
                 double dropoff = plugin.getConfig().getDouble("dropoff");
                 double points = (multiplier * (maxPoints - (playersCompleted - 1) * dropoff));
 
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    String message;
+                    if(player.equals(p)) {
+                        message = "You";
+                    } else {
+                        message = handler.getPlayerTeam(p).color + p.getName();
+                    }
+                    message += ChatColor.GREEN + " finished in " + ChatColor.YELLOW + ChatColor.BOLD;
 
-                //1st,2nd,and 3rd are special cases
-                switch (playersCompleted) {
-                    case 1:
-                        for (Player player : Bukkit.getOnlinePlayers()) {
-                            if (player.equals(p)) {
-                                p.sendMessage(ChatColor.GREEN + "You finished in " + ChatColor.YELLOW + ChatColor.BOLD + "1st " + ChatColor.RESET + ChatColor.GREEN + "place [" + ChatColor.YELLOW + ChatColor.BOLD + "+" + points + ChatColor.RESET + ChatColor.GREEN + "] points");
-                            } else {
-                                player.sendMessage(handler.getPlayerTeam(p).color + p.getName() + ChatColor.GREEN + " finished in " + ChatColor.YELLOW + ChatColor.BOLD + "1st " + ChatColor.RESET + ChatColor.GREEN + "place");
-                            }
-                        }
-                        break;
-                    case 2:
-                        for (Player player : Bukkit.getOnlinePlayers()) {
-                            if (player.equals(p)) {
-                                p.sendMessage(ChatColor.GREEN + "You finished in " + ChatColor.YELLOW + ChatColor.BOLD + "2nd " + ChatColor.RESET + ChatColor.GREEN + "place [" + ChatColor.YELLOW + ChatColor.BOLD + "+" + points + ChatColor.RESET + ChatColor.GREEN + "] points");
-                            } else {
-                                player.sendMessage(handler.getPlayerTeam(p).color + p.getName() + ChatColor.GREEN + " finished in " + ChatColor.YELLOW + ChatColor.BOLD + "2nd " + ChatColor.RESET + ChatColor.GREEN + "place");
-                            }
-                        }
-                        break;
-                    case 3:
-                        for (Player player : Bukkit.getOnlinePlayers()) {
-                            if (player.equals(p)) {
-                                p.sendMessage(ChatColor.GREEN + "You finished in " + ChatColor.YELLOW + ChatColor.BOLD + "3rd " + ChatColor.RESET + ChatColor.GREEN + "place [" + ChatColor.YELLOW + ChatColor.BOLD + "+" + points + ChatColor.RESET + ChatColor.GREEN + "] points");
-                            } else {
-                                player.sendMessage(handler.getPlayerTeam(p).color + p.getName() + ChatColor.GREEN + " finished in " + ChatColor.YELLOW + ChatColor.BOLD + "3rd " + ChatColor.RESET + ChatColor.GREEN + "place");
-                            }
-                        }
-                        break;
-                    default:
-                        for (Player player : Bukkit.getOnlinePlayers()) {
-                            if (player.equals(p)) {
-                                p.sendMessage(ChatColor.GREEN + "You finished in " + ChatColor.YELLOW + ChatColor.BOLD + playersCompleted + "th " + ChatColor.RESET + ChatColor.GREEN + "place [" + ChatColor.YELLOW + ChatColor.BOLD + "+" + points + ChatColor.RESET + ChatColor.GREEN + "] points");
-                            } else {
-                                player.sendMessage(handler.getPlayerTeam(p).color + p.getName() + ChatColor.GREEN + " finished in " + ChatColor.YELLOW + ChatColor.BOLD + playersCompleted + "th " + ChatColor.RESET + ChatColor.GREEN + "place");
-                            }
-                        }
-                        break;
+                    if(playersCompleted % 10 == 1) {
+                        message += playersCompleted + "st";
+                    } else if(playersCompleted % 10 == 2) {
+                        message += playersCompleted + "nd";
+                    } else if(playersCompleted % 10 == 3) {
+                        message += playersCompleted + "rd";
+                    } else {
+                        message += playersCompleted + "th";
+                    }
+                    message += ChatColor.RESET + "" + ChatColor.GREEN + " place [" + ChatColor.YELLOW + "" + ChatColor.BOLD + "+" + points + ChatColor.RESET + ChatColor.GREEN + "] points";
+                    player.sendMessage(message);
                 }
+
 
                 handler.getPlayerTeam(p).addTempPoints(p, points);
 
