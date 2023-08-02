@@ -60,7 +60,7 @@ public class Placeholder extends PlaceholderExpansion {
             }
         }
         if(s.equalsIgnoreCase("playersCompleted")) {
-            return playersCompleted + "";
+            return numPlayersCompleted + "";
             //return numPlayers + "/" + totalPlayers;
         }
         if(s.equalsIgnoreCase("totalPlayers")) {

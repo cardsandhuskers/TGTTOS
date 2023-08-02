@@ -14,7 +14,7 @@ public final class TGTTOS extends JavaPlugin {
     public static State gameState = State.GAME_STARTING;
     public static int currentRound;
     public static double multiplier = 1;
-    public static int playersCompleted = 0;
+    public static int numPlayersCompleted = 0;
     public static int totalPlayers = 0;
 //create pos1 and pos2 that are arena corners, set everything inside to air
     @Override

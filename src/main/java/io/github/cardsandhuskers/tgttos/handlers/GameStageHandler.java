@@ -16,12 +16,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static io.github.cardsandhuskers.tgttos.TGTTOS.*;
 
 public class GameStageHandler {
     private ArrayList<Arena> arenas;
     private TGTTOS plugin;
+    private ArrayList<UUID> playersCompleted;
     private Countdown pregameTimer, preroundTimer, roundTimer, postroundTimer, gameEndTimer;
     private Arena currentArena;
     public GameStageHandler(ArrayList<Arena> arenas, TGTTOS plugin) {
@@ -35,11 +37,13 @@ public class GameStageHandler {
     public void startGame() {
         plugin.getServer().getPluginManager().registerEvents(new BlockBreakListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new BlockPlaceListener(this), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new ButtonPressListener(this), plugin);
+
+        playersCompleted = new ArrayList<>();
+        plugin.getServer().getPluginManager().registerEvents(new ButtonPressListener(this, playersCompleted), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerDamageListener(plugin, this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerTrampleListener(), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin, this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin, this, playersCompleted), plugin);
         plugin.getServer().getPluginManager().registerEvents(new ItemThrowListener(), plugin);
 
         pregameTimer();
@@ -119,8 +123,9 @@ public class GameStageHandler {
                     currentRound++;
                     gameState = TGTTOS.State.BETWEEN_ROUND;
                     currentArena = arenas.get(currentRound - 1);
-                    playersCompleted = 0;
+                    numPlayersCompleted = 0;
                     totalPlayers = 0;
+                    playersCompleted.clear();
 
                     currentArena.buildWall(Material.BARRIER);
 
@@ -358,7 +363,7 @@ public class GameStageHandler {
      * If the finishing player is the last one, starts a new round
      */
     public void playerFinish() {
-        if(playersCompleted == totalPlayers) {
+        if(numPlayersCompleted == totalPlayers) {
             if(roundTimer != null) {
                 roundTimer.cancelTimer();
                 postRoundTimer();

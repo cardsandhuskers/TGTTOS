@@ -8,13 +8,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 import static io.github.cardsandhuskers.tgttos.TGTTOS.*;
 
 public class ButtonPressListener implements Listener {
     private GameStageHandler gameStageHandler;
+    private ArrayList<UUID> playersCompleted;
+
+
     private TGTTOS plugin = (TGTTOS) Bukkit.getPluginManager().getPlugin("TGTTOS");
-    public ButtonPressListener(GameStageHandler gameStageHandler) {
+    public ButtonPressListener(GameStageHandler gameStageHandler, ArrayList<UUID> playersCompleted) {
         this.gameStageHandler = gameStageHandler;
+        this.playersCompleted = playersCompleted;
     }
     @EventHandler
     public void onButtonPress(PlayerInteractEvent e) {
@@ -22,11 +29,12 @@ public class ButtonPressListener implements Listener {
             Material mat = e.getClickedBlock().getType();
             Player p = e.getPlayer();
             if (isButton(mat) && p.getGameMode() != GameMode.SPECTATOR) {
-                playersCompleted++;
+                numPlayersCompleted++;
+                playersCompleted.add(p.getUniqueId());
 
                 int maxPoints = plugin.getConfig().getInt("maxPoints");
                 double dropoff = plugin.getConfig().getDouble("dropoff");
-                double points = (multiplier * (maxPoints - (playersCompleted - 1) * dropoff));
+                double points = (multiplier * (maxPoints - (numPlayersCompleted - 1) * dropoff));
 
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     String message;
@@ -37,14 +45,14 @@ public class ButtonPressListener implements Listener {
                     }
                     message += ChatColor.GREEN + " finished in " + ChatColor.YELLOW + ChatColor.BOLD;
 
-                    if(playersCompleted % 10 == 1) {
-                        message += playersCompleted + "st";
-                    } else if(playersCompleted % 10 == 2) {
-                        message += playersCompleted + "nd";
-                    } else if(playersCompleted % 10 == 3) {
-                        message += playersCompleted + "rd";
+                    if(numPlayersCompleted % 10 == 1) {
+                        message += numPlayersCompleted + "st";
+                    } else if(numPlayersCompleted % 10 == 2) {
+                        message += numPlayersCompleted + "nd";
+                    } else if(numPlayersCompleted % 10 == 3) {
+                        message += numPlayersCompleted + "rd";
                     } else {
-                        message += playersCompleted + "th";
+                        message += numPlayersCompleted + "th";
                     }
                     message += ChatColor.RESET + "" + ChatColor.GREEN + " place [" + ChatColor.YELLOW + "" + ChatColor.BOLD + "+" + points + ChatColor.RESET + ChatColor.GREEN + "] points";
                     player.sendMessage(message);
