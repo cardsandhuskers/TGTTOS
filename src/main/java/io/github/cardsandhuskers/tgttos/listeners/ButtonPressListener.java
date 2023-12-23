@@ -1,7 +1,10 @@
 package io.github.cardsandhuskers.tgttos.listeners;
 
 import io.github.cardsandhuskers.tgttos.TGTTOS;
+import static io.github.cardsandhuskers.tgttos.TGTTOS.currentRound;
 import io.github.cardsandhuskers.tgttos.handlers.GameStageHandler;
+import io.github.cardsandhuskers.tgttos.objects.Stats;
+
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,13 +19,24 @@ import static io.github.cardsandhuskers.tgttos.TGTTOS.*;
 public class ButtonPressListener implements Listener {
     private GameStageHandler gameStageHandler;
     private ArrayList<UUID> playersCompleted;
+    private Stats stats;
 
 
     private TGTTOS plugin = (TGTTOS) Bukkit.getPluginManager().getPlugin("TGTTOS");
-    public ButtonPressListener(GameStageHandler gameStageHandler, ArrayList<UUID> playersCompleted) {
+    public ButtonPressListener(GameStageHandler gameStageHandler, ArrayList<UUID> playersCompleted, Stats stats) {
         this.gameStageHandler = gameStageHandler;
         this.playersCompleted = playersCompleted;
+        this.stats = stats;
     }
+
+    /**
+     * Checks if player clicks button at end of level. 
+     * Displays message to all players about player finish,
+     * assigns/updates points, and adds finish to collected 
+     * stats.
+     * 
+     * @param e player interaction
+     */
     @EventHandler
     public void onButtonPress(PlayerInteractEvent e) {
         if(e.getClickedBlock() != null) {
@@ -58,6 +72,9 @@ public class ButtonPressListener implements Listener {
                     player.sendMessage(message);
                 }
 
+                // Round,Player,Team,Place,Points
+                String lineEntry = TGTTOS.currentRound + "," + p.getName() + "," + handler.getPlayerTeam(p).getTeamName() + "," + numPlayersCompleted + "," + points;
+                stats.addEntry(lineEntry);
 
                 handler.getPlayerTeam(p).addTempPoints(p, points);
 

@@ -1,6 +1,7 @@
 package io.github.cardsandhuskers.tgttos.commands;
 
 import io.github.cardsandhuskers.teams.objects.Team;
+import io.github.cardsandhuskers.tgttos.objects.Stats;
 import io.github.cardsandhuskers.tgttos.TGTTOS;
 import io.github.cardsandhuskers.tgttos.handlers.GameStageHandler;
 import io.github.cardsandhuskers.tgttos.objects.Arena;
@@ -14,11 +15,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class StartGameCommand implements CommandExecutor {
-
     private TGTTOS plugin;
     private GameStageHandler gameStageHandler;
+    private Stats stats;
+
+    /**
+     * StartGameCommand constructor. Creates Stats object
+     * for stats collection during game.
+     * 
+     * @param plugin plugin
+     */
     public StartGameCommand(TGTTOS plugin) {
         this.plugin = plugin;
+        this.stats = new Stats("Round,Player,Team,Place,Points");
     }
 
     @Override
@@ -73,7 +82,7 @@ public class StartGameCommand implements CommandExecutor {
         }
 
         //makes GameStageHandler and starts game
-        gameStageHandler = new GameStageHandler(arenas, plugin);
+        gameStageHandler = new GameStageHandler(arenas, plugin, stats);
         gameStageHandler.startGame();
     }
 

@@ -1,6 +1,7 @@
 package io.github.cardsandhuskers.tgttos.handlers;
 
 import io.github.cardsandhuskers.teams.objects.Team;
+import io.github.cardsandhuskers.tgttos.objects.Stats;
 import io.github.cardsandhuskers.tgttos.TGTTOS;
 import io.github.cardsandhuskers.tgttos.listeners.*;
 import io.github.cardsandhuskers.tgttos.objects.Arena;
@@ -26,9 +27,12 @@ public class GameStageHandler {
     private ArrayList<UUID> playersCompleted;
     private Countdown pregameTimer, preroundTimer, roundTimer, postroundTimer, gameEndTimer;
     private Arena currentArena;
-    public GameStageHandler(ArrayList<Arena> arenas, TGTTOS plugin) {
+    private Stats stats;
+
+    public GameStageHandler(ArrayList<Arena> arenas, TGTTOS plugin, Stats stats) {
         this.arenas = arenas;
         this.plugin = plugin;
+        this.stats = stats;
     }
 
     /**
@@ -39,7 +43,7 @@ public class GameStageHandler {
         plugin.getServer().getPluginManager().registerEvents(new BlockPlaceListener(this), plugin);
 
         playersCompleted = new ArrayList<>();
-        plugin.getServer().getPluginManager().registerEvents(new ButtonPressListener(this, playersCompleted), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new ButtonPressListener(this, playersCompleted,stats), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerDamageListener(plugin, this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerTrampleListener(), plugin);
@@ -289,6 +293,7 @@ public class GameStageHandler {
 
     /**
      * Timer for very end of game, displays results and returns players to main lobby
+     * Writes collected stats to csv file.
      */
     public void gameEndTimer() {
         gameEndTimer = new Countdown((JavaPlugin)plugin,
@@ -297,6 +302,7 @@ public class GameStageHandler {
                 //Timer Start
                 () -> {
                     gameState = TGTTOS.State.GAME_OVER;
+                    stats.writeToFile(plugin.getDataFolder().toPath().toString(), "tgttosStats");
                 },
 
                 //Timer End
