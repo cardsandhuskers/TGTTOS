@@ -302,11 +302,24 @@ public class GameStageHandler {
                 //Timer Start
                 () -> {
                     gameState = TGTTOS.State.GAME_OVER;
-                    stats.writeToFile(plugin.getDataFolder().toPath().toString(), "tgttosStats");
+
+                    int eventNum;
+                    try {eventNum = Bukkit.getPluginManager().getPlugin("LobbyPlugin").getConfig().getInt("eventNum");} catch (Exception e) {eventNum = 1;}
+                    stats.writeToFile(plugin.getDataFolder().toPath().toString(), "tgttosStats" + eventNum);
                 },
 
                 //Timer End
                 () -> {
+
+                    try {
+                        plugin.statCalculator.calculateStats();
+                    } catch (Exception e) {
+                        StackTraceElement[] trace = e.getStackTrace();
+                        String str = "";
+                        for(StackTraceElement element:trace) str += element.toString() + "\n";
+                        plugin.getLogger().severe("ERROR Calculating Stats!\n" + str);
+                    }
+
                     for(Player p:Bukkit.getOnlinePlayers()) {
                         p.teleport(plugin.getConfig().getLocation("Lobby"));
                     }

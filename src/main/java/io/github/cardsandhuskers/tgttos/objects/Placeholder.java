@@ -3,7 +3,11 @@ package io.github.cardsandhuskers.tgttos.objects;
 
 import io.github.cardsandhuskers.tgttos.TGTTOS;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+
+import java.util.ArrayList;
 
 import static io.github.cardsandhuskers.tgttos.TGTTOS.*;
 
@@ -71,6 +75,28 @@ public class Placeholder extends PlaceholderExpansion {
         if(s.equalsIgnoreCase("round")) {
             return currentRound + "";
         }
+
+        String[] values = s.split("_");
+        try {
+            if(values[0].equalsIgnoreCase("placement")) {
+                ArrayList<StatCalculator.PlayerStatsHolder> statsHolders = plugin.statCalculator.getPlayerStatsHolders();
+                int index = Integer.parseInt(values[1]);
+                if(index > statsHolders.size()) return "";
+                StatCalculator.PlayerStatsHolder holder = statsHolders.get(Integer.parseInt(values[1]) - 1);
+                String color = "";
+                if (handler.getPlayerTeam(Bukkit.getPlayer(holder.name)) != null)
+                    color = handler.getPlayerTeam(Bukkit.getPlayer(holder.name)).color;
+                return color + holder.name + ChatColor.RESET + String.format(": %.1f", holder.getAveragePlacement());
+            }
+
+
+        } catch (Exception e) {
+            StackTraceElement[] trace = e.getStackTrace();
+            String str = "";
+            for(StackTraceElement element:trace) str += element.toString() + "\n";
+            plugin.getLogger().warning("Error with Placeholder!\n");
+        }
+
         return null;
     }
 }

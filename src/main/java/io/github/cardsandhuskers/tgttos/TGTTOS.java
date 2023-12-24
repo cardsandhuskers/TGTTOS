@@ -4,6 +4,7 @@ import io.github.cardsandhuskers.teams.Teams;
 import io.github.cardsandhuskers.teams.handlers.TeamHandler;
 import io.github.cardsandhuskers.tgttos.commands.*;
 import io.github.cardsandhuskers.tgttos.objects.Placeholder;
+import io.github.cardsandhuskers.tgttos.objects.StatCalculator;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +17,7 @@ public final class TGTTOS extends JavaPlugin {
     public static double multiplier = 1;
     public static int numPlayersCompleted = 0;
     public static int totalPlayers = 0;
+    public StatCalculator statCalculator;
 //create pos1 and pos2 that are arena corners, set everything inside to air
     @Override
     public void onEnable() {
@@ -48,10 +50,20 @@ public final class TGTTOS extends JavaPlugin {
         getCommand("reloadTGTTOS").setExecutor(new ReloadConfigCommand(this));
         getCommand("cancelTGTTOS").setExecutor(new CancelGameCommand(this, startGameCommand));
 
-        handler = Teams.handler;
+        handler = TeamHandler.getInstance();
 
         getConfig().options().copyDefaults(true);
         saveConfig();
+
+        statCalculator = new StatCalculator(this);
+        try {
+            statCalculator.calculateStats();
+        } catch (Exception e) {
+            StackTraceElement[] trace = e.getStackTrace();
+            String str = "";
+            for(StackTraceElement element:trace) str += element.toString() + "\n";
+            this.getLogger().severe("ERROR Calculating Stats!\n" + str);
+        }
 
     }
 

@@ -20,14 +20,13 @@ public class GameMessages {
 
     /**
      *
-     * @param numLevels
      * @return String to announce for game rules
      */
     public static String gameDescription() {
         String GAME_DESCRIPTION =
                 ChatColor.STRIKETHROUGH + "----------------------------------------" +
                 StringUtils.center(ChatColor.GOLD + "" + ChatColor.BOLD + "\nTo Get to the Other Side and Click a Button", 30) +
-                ChatColor.BLUE + "" + ChatColor.BOLD + "\nHow To Play:" +
+                ChatColor.BLUE + "" + ChatColor.BOLD + "\nHow To Play:" + ChatColor.RESET +
                 "\nWelcome to TGTTOSACAB!" +
                 "\nThere are 6 levels, you will have " + ChatColor.YELLOW + "" + ChatColor.BOLD + 2 + ChatColor.RESET + " minutes to complete each level!" +
                 "\nThe goal is to get across the opening. Each level is unique, with different obstacles and modes of travel." +

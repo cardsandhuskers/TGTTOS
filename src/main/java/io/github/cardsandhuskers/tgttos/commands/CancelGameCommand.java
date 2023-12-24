@@ -39,9 +39,9 @@ public class CancelGameCommand implements CommandExecutor {
             }
 
             if(sender instanceof Player p) {
-                p.sendMessage(ChatColor.GREEN + "Cancelled Dropper");
+                p.sendMessage(ChatColor.GREEN + "Cancelled TGTTOS");
             } else {
-                Bukkit.getLogger().info("Cancelled Dropper");
+                Bukkit.getLogger().info("Cancelled TGTTOS");
             }
         }
         else {

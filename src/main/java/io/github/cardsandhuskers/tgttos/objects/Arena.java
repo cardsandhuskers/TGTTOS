@@ -183,6 +183,7 @@ public class Arena {
             case LIME_WOOL:
             case RED_WOOL:
             case MAGENTA_WOOL:
+            case PINK_WOOL:
             case YELLOW_WOOL:
             case WHITE_WOOL: return true;
             default: return false;
