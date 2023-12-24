@@ -1,5 +1,6 @@
 package io.github.cardsandhuskers.tgttos.listeners;
 
+import io.github.cardsandhuskers.teams.handlers.TeamHandler;
 import io.github.cardsandhuskers.tgttos.TGTTOS;
 import static io.github.cardsandhuskers.tgttos.TGTTOS.currentRound;
 import io.github.cardsandhuskers.tgttos.handlers.GameStageHandler;
@@ -46,9 +47,10 @@ public class ButtonPressListener implements Listener {
                 numPlayersCompleted++;
                 playersCompleted.add(p.getUniqueId());
 
-                int maxPoints = plugin.getConfig().getInt("maxPoints");
+                double maxPoints = plugin.getConfig().getDouble("maxPoints");
                 double dropoff = plugin.getConfig().getDouble("dropoff");
-                double points = (multiplier * (maxPoints - (numPlayersCompleted - 1) * dropoff));
+                double points = Math.max((multiplier * (maxPoints - (numPlayersCompleted - 1) * dropoff)), 0);
+                TeamHandler.getInstance().getPlayerTeam(p).addTempPoints(p, points);
 
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     String message;
@@ -76,8 +78,6 @@ public class ButtonPressListener implements Listener {
                 // Round,Player,Team,Place,Points
                 String lineEntry = TGTTOS.currentRound + "," + p.getName() + "," + handler.getPlayerTeam(p).getTeamName() + "," + numPlayersCompleted + "," + points;
                 stats.addEntry(lineEntry);
-
-                handler.getPlayerTeam(p).addTempPoints(p, points);
 
                 p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
                 p.setGameMode(GameMode.SPECTATOR);

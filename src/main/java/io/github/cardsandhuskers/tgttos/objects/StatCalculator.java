@@ -22,7 +22,7 @@ public class StatCalculator {
     }
 
     public void calculateStats() throws IOException {
-        int initialEvent = 2;
+        int initialEvent = 1;
         int eventNum;
         try {eventNum = Bukkit.getPluginManager().getPlugin("LobbyPlugin").getConfig().getInt("eventNum");}
         catch (Exception e) {eventNum = initialEvent;}

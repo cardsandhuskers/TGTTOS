@@ -44,7 +44,7 @@ public class GameMessages {
         String POINTS_DESCRIPTION =
                 ChatColor.STRIKETHROUGH + "----------------------------------------" +
                 ChatColor.GOLD + "" + ChatColor.BOLD + "\nHow the game is Scored (for each level):" +
-                "\n1st Place: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("maxPoints") * multiplier) + ChatColor.RESET + " points" +
+                "\n1st Place: " + ChatColor.GOLD + (plugin.getConfig().getDouble("maxPoints") * multiplier) + ChatColor.RESET + " points" +
                 "\nPoint Drop-off: " + ChatColor.GOLD + (-plugin.getConfig().getDouble("dropoff") * multiplier) + ChatColor.RESET + " points for each player ahead" +
                 ChatColor.STRIKETHROUGH + "\n----------------------------------------";
 
