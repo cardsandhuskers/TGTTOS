@@ -96,6 +96,11 @@ public class Placeholder extends PlaceholderExpansion {
             for(StackTraceElement element:trace) str += element.toString() + "\n";
             plugin.getLogger().warning("Error with Placeholder!\n");
         }
+        try {
+            if(values[0].equalsIgnoreCase("yourFinish")) {
+                return plugin.statCalculator.getPlayerFinishPosition(p);
+            }
+        } catch (Exception e) {e.printStackTrace();}
 
         return null;
     }

@@ -50,7 +50,7 @@ public class ButtonPressListener implements Listener {
                 double maxPoints = plugin.getConfig().getDouble("maxPoints");
                 double dropoff = plugin.getConfig().getDouble("dropoff");
                 double points = Math.max((multiplier * (maxPoints - (numPlayersCompleted - 1) * dropoff)), 0);
-                TeamHandler.getInstance().getPlayerTeam(p).addTempPoints(p, points);
+                TeamHandler.getInstance().getPlayerTeam(p).addTempPoints(p, Math.max(0, points));
 
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     String message;

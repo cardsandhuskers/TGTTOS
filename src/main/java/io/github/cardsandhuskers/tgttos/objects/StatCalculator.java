@@ -1,10 +1,14 @@
 package io.github.cardsandhuskers.tgttos.objects;
 
+import io.github.cardsandhuskers.teams.handlers.TeamHandler;
+import io.github.cardsandhuskers.teams.objects.Team;
 import io.github.cardsandhuskers.tgttos.TGTTOS;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -71,6 +75,28 @@ public class StatCalculator {
 
     public ArrayList<PlayerStatsHolder> getPlayerStatsHolders() {
         return new ArrayList<>(playerStatsHolders);
+    }
+
+    public String getPlayerFinishPosition(OfflinePlayer p) {
+        String name = p.getName();
+        ArrayList<PlayerStatsHolder> pph= new ArrayList<>(playerStatsHolders);
+
+        int i = 1;
+        PlayerStatsHolder playerHolder = null;
+        for(PlayerStatsHolder holder: pph) {
+            if(holder.name.equals(name)) {
+                playerHolder = holder;
+                break;
+            }
+            i++;
+        }
+        if(playerHolder == null || i <= 10) return "";
+
+        Team team = TeamHandler.getInstance().getPlayerTeam(p.getPlayer());
+        String color = "";
+        if(team != null) color = team.getColor();
+
+        return i + ". " + color + "You" + ChatColor.RESET + ": " + String.format("%.1f", playerHolder.getAveragePlacement());
     }
 
     public class PlayerStatsHolder {
