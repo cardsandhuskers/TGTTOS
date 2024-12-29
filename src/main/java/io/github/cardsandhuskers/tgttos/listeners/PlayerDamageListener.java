@@ -1,13 +1,16 @@
 package io.github.cardsandhuskers.tgttos.listeners;
 
+import io.github.cardsandhuskers.teams.handlers.TeamHandler;
 import io.github.cardsandhuskers.tgttos.TGTTOS;
 import io.github.cardsandhuskers.tgttos.handlers.GameStageHandler;
 import io.github.cardsandhuskers.tgttos.objects.Arena;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class PlayerDamageListener implements Listener {
@@ -26,9 +29,19 @@ public class PlayerDamageListener implements Listener {
                 if(TGTTOS.gameState != TGTTOS.State.ROUND_ACTIVE) {
                     e.setCancelled(true);
                 } else {
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, ()-> {
-                        p.setHealth(20);
-                    },1);
+                    //prevent friendly fire
+                    if (e instanceof EntityDamageByEntityEvent damageEvent) {
+                        Entity damager = damageEvent.getDamager();
+                        if (damager instanceof Player attacker) {
+                            if(TeamHandler.getInstance().getPlayerTeam(p) == TeamHandler.getInstance().getPlayerTeam(attacker)) {
+                                e.setCancelled(true);
+                            }
+                        }
+                    } else {
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                            p.setHealth(20);
+                        }, 1);
+                    }
                 }
 
             }
