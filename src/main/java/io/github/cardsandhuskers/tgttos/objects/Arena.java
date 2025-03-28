@@ -39,7 +39,7 @@ public class Arena {
      * @return spawn location
      */
     public Location getSpawn() {
-        return spawn;
+        return spawn.clone();
     }
 
     /**
@@ -48,6 +48,7 @@ public class Arena {
      * @return
      */
     public boolean isInArena(Location l) {
+
         if(l.getX() >= getCoordinate(lowerx, 'x') && l.getX() <= getCoordinate(higherx, 'x')) {
             if(l.getY() >= getCoordinate(lowery, 'y') && l.getY() <= getCoordinate(highery, 'y')) {
                 if(l.getZ() >= getCoordinate(lowerz, 'z') && l.getZ() <= getCoordinate(higherz, 'z')) {
@@ -64,20 +65,46 @@ public class Arena {
      * @param mat
      */
     public void buildWall(Material mat) {
-        int z;
-        if(Math.abs(getCoordinate(lowerz, 'z') - spawn.getBlockZ()) < Math.abs(getCoordinate(higherz, 'z') - spawn.getBlockZ())) {
-            z = getCoordinate(lowerz, 'z');
-        } else {
-            z = getCoordinate(higherz, 'z');
-        }
 
-        for(int x = getCoordinate(lowerx, 'x'); x<=getCoordinate(higherx, 'x'); x++) {
-            for(int y = spawn.getBlockY(); y<= spawn.getBlockY() + 6; y++) {
-                //System.out.println("X: " + x + " Y: " + y + "Z: " + z);
-                Location loc = new Location(spawn.getWorld(), x,y,z);
-                loc.getBlock().setType(mat);
+        //hardcoding for elytra map because no time to make something good
+        if (elytra) {
+            //corner
+            int x = spawn.getBlockX() - 18;
+            int z = spawn.getBlockZ() + 18;
+
+            for(int ix = x; ix < x + 11; ix++) {
+                for (int iy = spawn.getBlockY(); iy <= spawn.getBlockY() + 3; iy++) {
+                    Location loc = new Location(spawn.getWorld(), ix, iy, z);
+                    loc.getBlock().setType(mat);
+                }
+            }
+
+            for(int iz = z; iz > z - 11; iz--) {
+                for (int iy = spawn.getBlockY(); iy <= spawn.getBlockY() + 3; iy++) {
+                    Location loc = new Location(spawn.getWorld(), x, iy, iz);
+                    loc.getBlock().setType(mat);
+                }
+            }
+
+        } else {
+            int z;
+            if(Math.abs(getCoordinate(lowerz, 'z') - spawn.getBlockZ()) < Math.abs(getCoordinate(higherz, 'z') - spawn.getBlockZ())) {
+                z = getCoordinate(lowerz, 'z');
+            } else {
+                z = getCoordinate(higherz, 'z');
+            }
+
+            for(int x = getCoordinate(lowerx, 'x'); x<=getCoordinate(higherx, 'x'); x++) {
+                for(int y = spawn.getBlockY(); y<= spawn.getBlockY() + 6; y++) {
+                    //System.out.println("X: " + x + " Y: " + y + "Z: " + z);
+                    Location loc = new Location(spawn.getWorld(), x,y,z);
+                    loc.getBlock().setType(mat);
+                }
             }
         }
+
+
+
     }
 
     /**

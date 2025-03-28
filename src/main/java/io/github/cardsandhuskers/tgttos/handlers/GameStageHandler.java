@@ -89,11 +89,11 @@ public class GameStageHandler {
                 //Each Second
                 (t) -> {
                     if(t.getSecondsLeft() == t.getTotalSeconds() - 2) {
-                        Bukkit.broadcastMessage(GameMessages.gameDescription());
+                        Bukkit.broadcast(GameMessages.gameDescription());
                         for(Player p:Bukkit.getOnlinePlayers()) p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
                     }
                     if(t.getSecondsLeft() == t.getTotalSeconds() - 12) {
-                        Bukkit.broadcastMessage(GameMessages.pointsDescription(plugin));
+                        Bukkit.broadcast(GameMessages.pointsDescription(plugin));
                         for(Player p:Bukkit.getOnlinePlayers()) p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
                     }
 
@@ -132,6 +132,12 @@ public class GameStageHandler {
                     playersCompleted.clear();
 
                     currentArena.buildWall(Material.BARRIER);
+
+                    if(currentArena.hasElytra()) {
+                        currentArena.getSpawn().getWorld().setTime(18000);
+                    } else {
+                        currentArena.getSpawn().getWorld().setTime(1000);
+                    }
 
                     Bukkit.broadcastMessage(ChatColor.AQUA + "Round: " + ChatColor.GREEN + ChatColor.BOLD + currentRound + ChatColor.RESET + ChatColor.AQUA + " on Map: " + ChatColor.GREEN + ChatColor.BOLD +
                                             currentArena.getMapName() + ChatColor.RESET + ChatColor.AQUA + " begins in " + ChatColor.GREEN + ChatColor.BOLD + time + ChatColor.RESET + ChatColor.AQUA + " seconds.");
